@@ -1,4 +1,9 @@
-{pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 
 with config.stylix.fonts;
 
@@ -8,19 +13,22 @@ let
     extension = ".json";
   };
 
-  themeExtension = pkgs.runCommandLocal "stylix-vscode" {
-    vscodeExtUniqueId = "stylix.stylix";
-    vscodeExtPublisher = "stylix";
-    version = "0.0.0";
-  } ''
-    mkdir -p "$out/share/vscode/extensions/$vscodeExtUniqueId/themes"
-    ln -s ${./package.json} "$out/share/vscode/extensions/$vscodeExtUniqueId/package.json"
-    ln -s ${themeFile} "$out/share/vscode/extensions/$vscodeExtUniqueId/themes/stylix.json"
-  '';
+  themeExtension =
+    pkgs.runCommandLocal "stylix-vscode"
+      {
+        vscodeExtUniqueId = "stylix.stylix";
+        vscodeExtPublisher = "stylix";
+        version = "0.0.0";
+      }
+      ''
+        mkdir -p "$out/share/vscode/extensions/$vscodeExtUniqueId/themes"
+        ln -s ${./package.json} "$out/share/vscode/extensions/$vscodeExtUniqueId/package.json"
+        ln -s ${themeFile} "$out/share/vscode/extensions/$vscodeExtUniqueId/themes/stylix.json"
+      '';
 
-in {
-  options.stylix.targets.vscode.enable =
-    config.lib.stylix.mkEnableTarget "VSCode" true;
+in
+{
+  options.stylix.targets.vscode.enable = config.lib.stylix.mkEnableTarget "VSCode" true;
 
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.vscode.enable) {
     programs.vscode = {
@@ -35,4 +43,3 @@ in {
     };
   };
 }
-
