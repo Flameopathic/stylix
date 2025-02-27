@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
@@ -46,7 +47,7 @@ let
       g = colors."${color}-rgb-g";
       b = colors."${color}-rgb-b";
     };
-  nur = config.lib.stylix.templates.nur.legacyPackages.${pkgs.system};
+  nur = inputs.nur.legacyPackages.${pkgs.system};
 in
 {
   options.stylix.targets = lib.listToAttrs (
