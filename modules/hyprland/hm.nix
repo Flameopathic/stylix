@@ -1,5 +1,83 @@
 { config, lib, ... }:
-config.lib.stylix.mkTarget {
+let
+  mkTarget =
+    {
+      name,
+      humanName,
+      autoEnable ? true,
+      extraOptions ? { },
+      configElements ? [ ],
+      generalConfig ? null,
+    }:
+    let
+      cfg = config.stylix.targets.${name};
+    in
+    {
+      options.stylix.targets.${name} = {
+        enable = config.lib.stylix.mkEnableTarget humanName autoEnable;
+      } // extraOptions;
+
+      config =
+        let
+          provideStylixArgs =
+            args:
+            (lib.mkMerge (
+              map (
+                arg:
+                if arg == "cfg" then
+                  {
+                    inherit cfg;
+                  }
+                else
+                  {
+                    ${arg} = config.stylix.${arg};
+                  }
+              ) args
+            ));
+          provideAvailableStylixArgs =
+            args:
+            (lib.mkMerge (
+              map (
+                arg:
+                if arg == "cfg" then
+                  {
+                    inherit cfg;
+                  }
+                else if (config.stylix.${arg} != null) then
+                  {
+                    ${arg} = config.stylix.${arg};
+                  }
+                else
+                  { }
+              ) args
+            ));
+          mkConfig =
+            fn:
+            let
+              args = builtins.attrNames (lib.functionArgs fn);
+            in
+            fn (provideAvailableStylixArgs args);
+          mkConditionalConfig =
+            fn:
+            let
+              args = builtins.attrNames (lib.functionArgs fn);
+            in
+            if
+              builtins.all (arg: (arg == "cfg") || (config.stylix.${arg} != null)) args
+            then
+              fn (provideStylixArgs args)
+            else
+              { };
+        in
+        lib.mkIf (config.stylix.enable && cfg.enable) (
+          lib.mkMerge (
+            (map mkConditionalConfig configElements)
+            ++ lib.optional (generalConfig != null) (mkConfig generalConfig)
+          )
+        );
+    };
+in
+mkTarget {
   name = "hyprland";
   humanName = "Hyprland";
   extraOptions.hyprpaper.enable = config.lib.stylix.mkEnableTarget "Hyprpaper" (
