@@ -79,46 +79,49 @@
             let
               provideStylixArgs =
                 args:
-                (lib.mkMerge map (
-                  arg:
-                  if arg == "cfg" then
-                    {
-                      inherit cfg;
-                    }
-                  else
-                    {
-                      ${arg} = config.stylix.${arg};
-                    }
-                ) args);
+                (lib.mkMerge (
+                  map (
+                    arg:
+                    if arg == "cfg" then
+                      {
+                        inherit cfg;
+                      }
+                    else
+                      {
+                        ${arg} = config.stylix.${arg};
+                      }
+                  ) args
+                ));
               provideAvailableStylixArgs =
                 args:
-                (lib.mkMerge map (
-                  arg:
-                  if arg == "cfg" then
-                    {
-                      inherit cfg;
-                    }
-                  else if (config.stylix ? arg) then
-                    {
-                      ${arg} = config.stylix.${arg};
-                    }
-                  else
-                    { }
-                ) args);
+                (lib.mkMerge (
+                  map (
+                    arg:
+                    if arg == "cfg" then
+                      {
+                        inherit cfg;
+                      }
+                    else if (config.stylix.${arg} != null) then
+                      {
+                        ${arg} = config.stylix.${arg};
+                      }
+                    else
+                      { }
+                  ) args
+                ));
               mkConfig =
                 fn:
                 let
-                  args = cfg builtins.attrNames (lib.functionArgs fn);
+                  args = builtins.attrNames (lib.functionArgs fn);
                 in
                 fn (provideAvailableStylixArgs args);
               mkConditionalConfig =
                 fn:
                 let
-                  args = cfg builtins.attrNames (lib.functionArgs fn);
+                  args = builtins.attrNames (lib.functionArgs fn);
                 in
-                fn:
                 if
-                  builtins.all (arg: (arg == "cfg") || (builtins.hasAttr config.stylix arg)) args
+                  builtins.all (arg: (arg == "cfg") || (config.stylix.${arg} != null)) args
                 then
                   fn (provideStylixArgs args)
                 else
@@ -126,7 +129,8 @@
             in
             lib.mkIf (config.stylix.enable && cfg.enable) (
               lib.mkMerge (
-                (map mkConditionalConfig configElements) ++ [ (mkConfig generalConfig) ]
+                (map mkConditionalConfig configElements)
+                ++ lib.optional (generalConfig != null) (mkConfig generalConfig)
               )
             );
         };
