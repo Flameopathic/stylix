@@ -29,10 +29,10 @@ mkTarget {
       }
     )
     (
-      { colorGeneration }:
+      { colors }:
       {
         programs.qutebrowser.settings.colors.webpage.preferred_color_scheme = lib.mkIf (
-          colorGeneration.polarity == "dark"
+          colors.generation.polarity == "dark"
         ) "dark";
       }
     )

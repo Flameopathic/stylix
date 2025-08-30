@@ -97,13 +97,13 @@ towards a dark or light theme with:
 
 - ```nix
   {
-    stylix.colorGeneration.polarity = "dark";
+    stylix.colors.generation.polarity = "dark";
   }
   ```
 
 - ```nix
   {
-    stylix.colorGeneration.polarity = "light";
+    stylix.colors.generation.polarity = "light";
   }
   ```
 

@@ -2,7 +2,7 @@
 let
   recommendedStyle = {
     gnome =
-      if config.stylix.colorGeneration.polarity == "dark" then
+      if config.stylix.colors.generation.polarity == "dark" then
         "adwaita-dark"
       else
         "adwaita";

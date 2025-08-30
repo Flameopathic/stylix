@@ -36,21 +36,24 @@ let
         {
           path = [
             "stylix"
-            "colorGeneration"
+            "colors"
+            "generation"
             "contrast"
           ];
         }
         {
           path = [
             "stylix"
-            "colorGeneration"
+            "colors"
+            "generation"
             "polarity"
           ];
         }
         {
           path = [
             "stylix"
-            "colorGeneration"
+            "colors"
+            "generation"
             "scheme"
           ];
         }
@@ -227,11 +230,10 @@ in
     lib.optionalAttrs (options ? home-manager) (
       lib.mkMerge [
         (lib.mkIf config.stylix.homeManagerIntegration.autoImport {
-          home-manager.sharedModules =
-            [
-              config.stylix.homeManagerIntegration.module
-            ]
-            ++ lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules;
+          home-manager.sharedModules = [
+            config.stylix.homeManagerIntegration.module
+          ]
+          ++ lib.optionals config.stylix.homeManagerIntegration.followSystem copyModules;
         })
         (lib.mkIf config.home-manager.useGlobalPkgs {
           home-manager.sharedModules = lib.singleton {

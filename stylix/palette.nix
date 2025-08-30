@@ -13,10 +13,10 @@ in
   imports = lib.singleton (
     lib.mkRenamedOptionModule
       [ "stylix" "polarity" ]
-      [ "stylix" "colorGeneration" "polarity" ]
+      [ "stylix" "colors" "generation" "polarity" ]
   );
   options.stylix = {
-    colorGeneration = {
+    colors.generation = {
       scheme = lib.mkOption {
         type = lib.types.enum [
           "content"
@@ -114,8 +114,8 @@ in
           pkgs.runCommand "palette.json"
             {
               nativeBuildInputs = [ pkgs.matugen ];
-              CONTRAST = toString cfg.colorGeneration.contrast;
-              SCHEME = cfg.colorGeneration.scheme;
+              CONTRAST = toString cfg.colors.generation.contrast;
+              SCHEME = cfg.colors.generation.scheme;
               IMAGE = cfg.image;
             }
             ''
@@ -138,9 +138,9 @@ in
         default =
           let
             colors =
-              (lib.importJSON cfg.generated.json).colors.${cfg.colorGeneration.polarity};
+              (lib.importJSON cfg.generated.json).colors.${cfg.colors.generation.polarity};
           in
-          if cfg.colorGeneration.polarity == "light" then
+          if cfg.colors.generation.polarity == "light" then
             {
               base00 = colors.background;
               base01 = colors.surface_container;

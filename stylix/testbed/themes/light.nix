@@ -8,7 +8,7 @@ in
     enable = true;
     image = images.light;
     base16Scheme = "${tinted-schemes}/base16/catppuccin-latte.yaml";
-    colorGeneration.polarity = "light";
+    colors.generation.polarity = "light";
     cursor = {
       name = "Vanilla-DMZ";
       package = pkgs.vanilla-dmz;

@@ -33,14 +33,14 @@
   config = lib.mkIf (config.stylix.enable && config.stylix.targets.qt.enable) (
     let
       icons =
-        if (config.stylix.colorGeneration.polarity == "dark") then
+        if (config.stylix.colors.generation.polarity == "dark") then
           config.stylix.icons.dark
         else
           config.stylix.icons.light;
 
       recommendedStyles = {
         gnome =
-          if config.stylix.colorGeneration.polarity == "dark" then
+          if config.stylix.colors.generation.polarity == "dark" then
             "adwaita-dark"
           else
             "adwaita";

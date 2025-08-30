@@ -203,7 +203,7 @@ let
           if arg == "cfg" then
             cfg
           else if arg == "colors" then
-            config.lib.stylix.colors
+            lib.attrsets.unionOfDisjoint config.lib.stylix.colors config.stylix.colors
           else
             config.stylix.${arg}
               or (throw "stylix: mkTarget expected one of `cfg`, `colors`, ${
@@ -240,16 +240,15 @@ let
 
       options.stylix.targets.${name}.enable =
         let
-          enableArgs =
-            {
-              name = humanName;
-            }
-            // lib.optionalAttrs (args ? autoEnable) { inherit autoEnable; }
-            // lib.optionalAttrs (args ? autoEnableExpr) { inherit autoEnableExpr; }
-            // lib.optionalAttrs (args ? autoWrapEnableExpr) {
-              autoWrapExpr = autoWrapEnableExpr;
-            }
-            // lib.optionalAttrs (args ? enableExample) { example = enableExample; };
+          enableArgs = {
+            name = humanName;
+          }
+          // lib.optionalAttrs (args ? autoEnable) { inherit autoEnable; }
+          // lib.optionalAttrs (args ? autoEnableExpr) { inherit autoEnableExpr; }
+          // lib.optionalAttrs (args ? autoWrapEnableExpr) {
+            autoWrapExpr = autoWrapEnableExpr;
+          }
+          // lib.optionalAttrs (args ? enableExample) { example = enableExample; };
         in
         config.lib.stylix.mkEnableTargetWith enableArgs;
 

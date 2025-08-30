@@ -6,7 +6,7 @@ in
   stylix = {
     enable = true;
     image = images.light;
-    colorGeneration.polarity = "light";
+    colors.generation.polarity = "light";
     cursor = {
       name = "Vanilla-DMZ";
       package = pkgs.vanilla-dmz;
